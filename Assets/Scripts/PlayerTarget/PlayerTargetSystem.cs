@@ -15,7 +15,7 @@ namespace PlayerTarget {
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            float2 playerLocation = GetPlayerLocation();
+            float2 playerLocation = GetPlayerLocation(ref state);
             foreach (PlayerTargeterAspect targeter in SystemAPI.Query<PlayerTargeterAspect>()) {
                 targeter.Target(playerLocation);
             }
@@ -26,9 +26,11 @@ namespace PlayerTarget {
 
 
         [BurstCompile]
-        private float2 GetPlayerLocation() {
+        private float2 GetPlayerLocation(ref SystemState state) {
             Entity playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
-            return SystemAPI.GetComponent<LocalTransform>(playerEntity).Position.xy;
+            LocalTransform localTransform = SystemAPI.GetComponent<LocalTransform>(playerEntity);
+            float2 playerLocation = localTransform.Position.xy;
+            return playerLocation;
         }
         
         
