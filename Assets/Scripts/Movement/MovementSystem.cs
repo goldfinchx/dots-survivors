@@ -1,5 +1,7 @@
 ﻿using Unity.Burst;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace Movement {
     public partial struct MovementSystem : ISystem {
@@ -10,13 +12,23 @@ namespace Movement {
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            float deltaTime = SystemAPI.Time.DeltaTime;
-            foreach (MovementAspect aspect in SystemAPI.Query<MovementAspect>()) {
-                aspect.Move(deltaTime);
-            }
+            MovementJob job = new() { DeltaTime = SystemAPI.Time.DeltaTime };
+            job.Schedule();
         }
 
         [BurstCompile]
         public void OnDestroy(ref SystemState state) { }
     }
+
+    [BurstCompile]
+    public partial struct MovementJob : IJobEntity {
+
+        public float DeltaTime;
+
+        [BurstCompile]
+        private void Execute(MovementAspect aspect) {
+            aspect.Move(DeltaTime);
+        }
+    }
+
 }

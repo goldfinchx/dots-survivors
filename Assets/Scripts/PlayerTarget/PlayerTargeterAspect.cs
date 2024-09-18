@@ -1,5 +1,4 @@
-﻿using Enemies;
-using Movement;
+﻿using Movement;
 using Unity.Entities;
 using Unity.Mathematics;
 

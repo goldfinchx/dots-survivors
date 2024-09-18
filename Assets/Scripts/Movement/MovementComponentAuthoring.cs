@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Movement {
     public class MovementComponentAuthoring : MonoBehaviour {
         [SerializeField] private float2 target;
-        [SerializeField] private float speed;
+        [SerializeField] private float speed = 1;
 
         public class MovementComponentBaker : Baker<MovementComponentAuthoring> {
             public override void Bake(MovementComponentAuthoring authoring) {
