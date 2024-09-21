@@ -1,6 +1,8 @@
 ﻿using Player;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Random = UnityEngine.Random;
@@ -30,11 +32,11 @@ namespace Spawners {
             if (!(SystemAPI.Time.ElapsedTime - spawnerComponent.LastSpawnTime > spawnerComponent.SpawnRate)) {
                 return;
             }
-            
+
             EntityCommandBuffer entityCommandBuffer = SystemAPI
                 .GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
-            
+
             EnemySpawnerJob spawnerJob = new() {
                 CommandBuffer = entityCommandBuffer,
                 EnemyPrefab = GetRandomEnemyPrefab(ref state),
@@ -44,7 +46,6 @@ namespace Spawners {
             };
 
             state.Dependency = spawnerJob.Schedule(state.Dependency);
-            state.Dependency.Complete();
         }
 
         [BurstCompile]
@@ -68,23 +69,25 @@ namespace Spawners {
         public void OnStopRunning(ref SystemState state) { }
     }
 
+    
+    
     [BurstCompile]
     public partial struct EnemySpawnerJob : IJobEntity {
         public EntityCommandBuffer CommandBuffer;
-        public Entity EnemyPrefab;
-        public Entity SpawnerEntity;
-        public float2 SpawnPosition;
-        public double ElapsedTime;
+        [ReadOnly] public Entity EnemyPrefab;
+        [ReadOnly] public Entity SpawnerEntity;
+        [ReadOnly] public float2 SpawnPosition;
+        [ReadOnly] public double ElapsedTime;
 
         [BurstCompile]
         private void Execute(ref EnemySpawnerComponent spawnerComponent) {
             if (!(ElapsedTime - spawnerComponent.LastSpawnTime > spawnerComponent.SpawnRate)) {
                 return;
             }
-            
+
             Entity enemy = CommandBuffer.Instantiate(EnemyPrefab);
             float3 position = new(SpawnPosition.xy, 0);
-            
+
             spawnerComponent.LastSpawnTime = ElapsedTime;
             CommandBuffer.SetComponent(enemy, LocalTransform.FromPosition(position));
             CommandBuffer.SetComponent(SpawnerEntity, spawnerComponent);
