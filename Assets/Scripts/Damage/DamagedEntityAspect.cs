@@ -13,7 +13,7 @@ namespace Damage {
 
         public float Health {
             get => health.ValueRO.Value;
-            set => health.ValueRW.Value = value;
+            private set => health.ValueRW.Value = value;
         }
 
         public void Damage(int damage) {

@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Health;
+﻿using Health;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Damage {
@@ -55,7 +53,7 @@ namespace Damage {
         public BufferLookup<DamageEvent> DamageEventsLookup;
         
         [BurstCompile]
-        private void Execute(ref DamagedEntityAspect damagedEntityAspect) {
+        private void Execute(DamagedEntityAspect damagedEntityAspect) {
             Entity entity = damagedEntityAspect.Entity;
             DynamicBuffer<DamageEvent> damageEvents = DamageEventsLookup[entity];
             
