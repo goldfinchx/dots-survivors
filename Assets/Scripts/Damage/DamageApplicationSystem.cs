@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Damage {
-    public partial struct DamageSystem : ISystem {
+    public partial struct DamageApplicationSystem : ISystem {
 
         private BufferLookup<DamageEvent> eventsLookup;
         
