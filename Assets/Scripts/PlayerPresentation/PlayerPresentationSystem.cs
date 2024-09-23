@@ -22,7 +22,7 @@ namespace PlayerPresentation {
         }
         
         private void CreatePresentationObject(ref Entity playerEntity) {
-            GameObject playerPresentation = new("PlayerPresentation");
+            GameObject playerPresentation = new("PlayerPresenter");
             PlayerManagedData playerManagedData = new() { PresenterGameObject = playerPresentation };
             EntityManager.AddComponentObject(playerEntity, playerManagedData);
         }
