@@ -2,7 +2,9 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Physics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Damage {
     public partial struct DamageSystem : ISystem {
@@ -31,7 +33,9 @@ namespace Damage {
             //     Debug.Log("DamageSystem: DamageEvent added to all entities with DamagedEntityAspect");
             //     return;
             // }
+            
 
+            eventsLookup.Update(ref state);
             EntityCommandBuffer commandBuffer = new(Allocator.TempJob);
             DamageJob damageJob = new() {
                 CommandBuffer = commandBuffer,

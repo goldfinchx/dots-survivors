@@ -68,8 +68,6 @@ namespace Spawners {
         [BurstCompile]
         public void OnStopRunning(ref SystemState state) { }
     }
-
-    
     
     [BurstCompile]
     public partial struct EnemySpawnerJob : IJobEntity {

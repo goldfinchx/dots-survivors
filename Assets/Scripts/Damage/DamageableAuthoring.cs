@@ -4,12 +4,16 @@ using UnityEngine;
 
 namespace Damage {
 
-    public class DamagedTagAuthoring : MonoBehaviour {
+    public class DamageableAuthoring : MonoBehaviour {
+
+        [SerializeField] private float maxHealth = 100f; 
         
-        private class DamageComponentAuthoringBaker : Baker<DamagedTagAuthoring> {
-            public override void Bake(DamagedTagAuthoring authoring) {
+        private class DamageableAuthoringBaker : Baker<DamageableAuthoring> {
+            public override void Bake(DamageableAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new DamagedTag());
+                AddComponent(entity, new HealthComponent(authoring.maxHealth));
+                
                 AddBuffer<DamageEvent>(entity);
                 SetComponentEnabled<DamagedTag>(entity, false);
             }
