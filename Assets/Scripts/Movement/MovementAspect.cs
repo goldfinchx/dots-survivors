@@ -1,12 +1,13 @@
-﻿using Unity.Entities;
+﻿using Movement;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Movement {
+namespace Movements {
     public readonly partial struct MovementAspect : IAspect {
 
         private readonly RefRW<LocalTransform> localTransform;
-        private readonly RefRO<Movement> movementComponent;
+        private readonly RefRO<MovementComponent> movementComponent;
 
         private quaternion Rotation {
             get => localTransform.ValueRO.Rotation;

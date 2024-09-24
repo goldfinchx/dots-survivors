@@ -15,7 +15,7 @@ namespace Damage {
 
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<Health.Health>();
+            state.RequireForUpdate<HealthComponent>();
             state.RequireForUpdate<DamageEvent>();
             eventsLookup = state.GetBufferLookup<DamageEvent>();
         }
@@ -44,7 +44,7 @@ namespace Damage {
         [ReadOnly] public double Time;
         
         [BurstCompile]
-        private void Execute(Entity entity, ref Health.Health health, ref Damageable damageable) {
+        private void Execute(Entity entity, ref HealthComponent health, ref Damageable damageable) {
             if (damageable.LastDamageTime + damageable.Cooldown > Time) {
                 Debug.Log("COOLDOWN");
                 return;

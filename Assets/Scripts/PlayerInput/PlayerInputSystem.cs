@@ -1,4 +1,5 @@
 ﻿using Movement;
+using Movements;
 using NUnit.Framework;
 using Player;
 using Unity.Entities;
@@ -38,7 +39,7 @@ namespace PlayerInput {
         }
 
         private void UpdateMovement(float2 input) {
-            Movement.Movement movement = EntityManager.GetComponentData<Movement.Movement>(playerEntity);
+            MovementComponent movement = EntityManager.GetComponentData<MovementComponent>(playerEntity);
             LocalTransform transform = EntityManager.GetComponentData<LocalTransform>(playerEntity);
 
             float2 newTarget = transform.Position.xy + input;

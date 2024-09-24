@@ -10,7 +10,7 @@ namespace Health {
         private class HealthAuthoringBaker : Baker<HealthAuthoring> {
             public override void Bake(HealthAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new Health(authoring.maxHealth));
+                AddComponent(entity, new HealthComponent(authoring.maxHealth));
             }
         }
         

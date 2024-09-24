@@ -12,11 +12,7 @@ namespace Spawners {
             public override void Bake(EnemySpawnerConfigAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new EnemySpawnerConfig {
-                    SpawnRadius = authoring.spawnRadius,
-                    SpawnRate = authoring.spawnRate,
-                    LastSpawnTime = 0
-                });
+                AddComponent(entity, new EnemySpawnerConfig(authoring.spawnRate, authoring.spawnRadius));
 
                 DynamicBuffer<BufferedEnemyPrefab> buffer = AddBuffer<BufferedEnemyPrefab>(entity);
                 foreach (GameObject prefab in authoring.prefabs) {

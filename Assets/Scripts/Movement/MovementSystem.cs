@@ -1,13 +1,14 @@
-﻿using Unity.Burst;
+﻿using Movement;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Movement {
+namespace Movements {
     public partial struct MovementSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<Movement>();
+            state.RequireForUpdate<MovementComponent>();
         }
 
         [BurstCompile]

@@ -1,17 +1,18 @@
 ﻿using Movement;
+using Movements;
 using Player;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace PlayerTargeter {
+namespace PlayerTargeting {
     public partial struct PlayerTargetSystem : ISystem {
         
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<PlayerTag>();
-            state.RequireForUpdate<PlayerTarget.PlayerTargeter>();
+            state.RequireForUpdate<PlayerTargeting.PlayerTargeterTag>();
         }
 
         [BurstCompile]
@@ -33,9 +34,12 @@ namespace PlayerTargeter {
             return playerLocation;
         }
         
+        [BurstCompile]
         public partial struct TargetingJob : IJobEntity {
             public float2 PlayerLocation;
-            public void Execute(Entity entity, ref PlayerTarget.PlayerTargeter _, ref Movement.Movement movement) {
+
+            [BurstCompile]
+            private void Execute(PlayerTargeterTag _, ref MovementComponent movement) {
                 movement.Target = PlayerLocation;
             }
         }

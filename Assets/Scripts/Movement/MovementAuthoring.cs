@@ -1,8 +1,9 @@
-﻿using Unity.Entities;
+﻿using Movement;
+using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Movement {
+namespace Movements {
     public class MovementAuthoring : MonoBehaviour {
         [SerializeField] private float2 target;
         [SerializeField] private float speed = 1;
@@ -10,7 +11,7 @@ namespace Movement {
         public class MovementAuthoringBaker : Baker<MovementAuthoring> {
             public override void Bake(MovementAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new Movement { Target = authoring.target, Speed = authoring.speed });
+                AddComponent(entity, new MovementComponent { Target = authoring.target, Speed = authoring.speed });
             }
         }
     }
