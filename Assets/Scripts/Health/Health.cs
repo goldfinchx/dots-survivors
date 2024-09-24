@@ -1,11 +1,11 @@
 ﻿using Unity.Entities;
 
 namespace Health {
-    public struct HealthComponent : IComponentData {
+    public struct Health : IComponentData {
         public readonly float MaxValue;
         public float Value;
         
-        public HealthComponent(float maxValue) {
+        public Health(float maxValue) {
             MaxValue = maxValue;
             Value = maxValue;
         }

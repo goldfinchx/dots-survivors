@@ -2,34 +2,26 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Random = UnityEngine.Random;
 
 namespace Spawners {
-    public partial struct EnemySpawnerSystem : ISystem, ISystemStartStop {
-
-        private Entity spawnerEntity;
-        private Entity playerEntity;
+    public partial struct EnemySpawnerSystem : ISystem {
+        
 
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BeginInitializationEntityCommandBufferSystem.Singleton>();
-            state.RequireForUpdate<EnemySpawnerComponent>();
+            state.RequireForUpdate<EnemySpawnerConfig>();
             state.RequireForUpdate<PlayerTag>();
         }
-
-        [BurstCompile]
-        public void OnStartRunning(ref SystemState state) {
-            spawnerEntity = SystemAPI.GetSingletonEntity<EnemySpawnerComponent>();
-            playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
-        }
+        
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EnemySpawnerComponent spawnerComponent = SystemAPI.GetComponent<EnemySpawnerComponent>(spawnerEntity);
-            if (!(SystemAPI.Time.ElapsedTime - spawnerComponent.LastSpawnTime > spawnerComponent.SpawnRate)) {
+            EnemySpawnerConfig spawnerConfig = SystemAPI.GetSingleton<EnemySpawnerConfig>();
+            if (!(SystemAPI.Time.ElapsedTime - spawnerConfig.LastSpawnTime > spawnerConfig.SpawnRate)) {
                 return;
             }
 
@@ -37,10 +29,12 @@ namespace Spawners {
                 .GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
+            Entity spawnerEntity = SystemAPI.GetSingletonEntity<EnemySpawnerConfig>();
+            Entity playerEntity = SystemAPI.GetSingletonEntity<PlayerTag>();
             EnemySpawnerJob spawnerJob = new() {
                 CommandBuffer = entityCommandBuffer,
-                EnemyPrefab = GetRandomEnemyPrefab(ref state),
-                SpawnPosition = GetRandomSpawnPosition(ref state),
+                EnemyPrefab = GetRandomEnemyPrefab(ref state, spawnerEntity),
+                SpawnPosition = GetRandomSpawnPosition(ref state, spawnerEntity, playerEntity),
                 SpawnerEntity = spawnerEntity,
                 ElapsedTime = SystemAPI.Time.ElapsedTime
             };
@@ -49,24 +43,22 @@ namespace Spawners {
         }
 
         [BurstCompile]
-        private Entity GetRandomEnemyPrefab(ref SystemState state) {
+        private Entity GetRandomEnemyPrefab(ref SystemState state, Entity spawnerEntity) {
             DynamicBuffer<BufferedEnemyPrefab> buffer = SystemAPI.GetBuffer<BufferedEnemyPrefab>(spawnerEntity);
             return buffer[Random.Range(0, buffer.Length)].Value;
         }
 
         [BurstCompile]
-        private float2 GetRandomSpawnPosition(ref SystemState state) {
+        private float2 GetRandomSpawnPosition(ref SystemState state, Entity spawnerEntity, Entity playerEntity) {
             LocalTransform localTransform = SystemAPI.GetComponent<LocalTransform>(playerEntity);
-            int spawnRadius = SystemAPI.GetComponent<EnemySpawnerComponent>(spawnerEntity).SpawnRadius;
+            int spawnRadius = SystemAPI.GetComponent<EnemySpawnerConfig>(spawnerEntity).SpawnRadius;
             float2 spawnOffset = new(Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius));
             return localTransform.Position.xy + spawnOffset;
         }
 
         [BurstCompile]
         public void OnDestroy(ref SystemState state) { }
-
-        [BurstCompile]
-        public void OnStopRunning(ref SystemState state) { }
+        
     }
     
     [BurstCompile]
@@ -78,17 +70,17 @@ namespace Spawners {
         [ReadOnly] public double ElapsedTime;
 
         [BurstCompile]
-        private void Execute(ref EnemySpawnerComponent spawnerComponent) {
-            if (!(ElapsedTime - spawnerComponent.LastSpawnTime > spawnerComponent.SpawnRate)) {
+        private void Execute(ref EnemySpawnerConfig spawnerConfig) {
+            if (!(ElapsedTime - spawnerConfig.LastSpawnTime > spawnerConfig.SpawnRate)) {
                 return;
             }
 
             Entity enemy = CommandBuffer.Instantiate(EnemyPrefab);
             float3 position = new(SpawnPosition.xy, 0);
 
-            spawnerComponent.LastSpawnTime = ElapsedTime;
+            spawnerConfig.LastSpawnTime = ElapsedTime;
             CommandBuffer.SetComponent(enemy, LocalTransform.FromPosition(position));
-            CommandBuffer.SetComponent(SpawnerEntity, spawnerComponent);
+            CommandBuffer.SetComponent(SpawnerEntity, spawnerConfig);
         }
     }
 }

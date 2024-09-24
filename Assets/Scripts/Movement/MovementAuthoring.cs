@@ -10,7 +10,7 @@ namespace Movement {
         public class MovementAuthoringBaker : Baker<MovementAuthoring> {
             public override void Bake(MovementAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new MovementComponent { Target = authoring.target, Speed = authoring.speed });
+                AddComponent(entity, new Movement { Target = authoring.target, Speed = authoring.speed });
             }
         }
     }

@@ -7,7 +7,7 @@ namespace Movement {
     public partial struct MovementSystem : ISystem {
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<MovementComponent>();
+            state.RequireForUpdate<Movement>();
         }
 
         [BurstCompile]

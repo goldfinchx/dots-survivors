@@ -3,16 +3,16 @@ using Unity.Entities;
 using UnityEngine;
 
 namespace Spawners {
-    public class EnemySpawnerComponentAuthoring : MonoBehaviour {
+    public class EnemySpawnerConfigAuthoring : MonoBehaviour {
         [SerializeField] private int spawnRadius;
         [SerializeField] private float spawnRate;
         [SerializeField] private List<GameObject> prefabs;
 
-        public class EnemySpawnerComponentBaker : Baker<EnemySpawnerComponentAuthoring> {
-            public override void Bake(EnemySpawnerComponentAuthoring authoring) {
+        public class EnemySpawnerComponentBaker : Baker<EnemySpawnerConfigAuthoring> {
+            public override void Bake(EnemySpawnerConfigAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new EnemySpawnerComponent {
+                AddComponent(entity, new EnemySpawnerConfig {
                     SpawnRadius = authoring.spawnRadius,
                     SpawnRate = authoring.spawnRate,
                     LastSpawnTime = 0

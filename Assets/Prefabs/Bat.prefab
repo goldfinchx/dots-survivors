@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9128005765667331039}
   - component: {fileID: 5364579254578009982}
   - component: {fileID: 4131765456482002972}
+  - component: {fileID: 2462519221405076786}
   - component: {fileID: 5850278679212571628}
   - component: {fileID: 3723588366704726088}
   - component: {fileID: 5493939876665686405}
@@ -60,6 +61,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0954a6e12d9c46b98a45c018a7598bf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDamage: 10
+  cooldown: 0.2
+--- !u!114 &2462519221405076786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4190703337703658917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6765899f154f69b0f3d1d78327fd43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100

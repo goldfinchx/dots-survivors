@@ -38,7 +38,7 @@ namespace PlayerInput {
         }
 
         private void UpdateMovement(float2 input) {
-            MovementComponent movement = EntityManager.GetComponentData<MovementComponent>(playerEntity);
+            Movement.Movement movement = EntityManager.GetComponentData<Movement.Movement>(playerEntity);
             LocalTransform transform = EntityManager.GetComponentData<LocalTransform>(playerEntity);
 
             float2 newTarget = transform.Position.xy + input;

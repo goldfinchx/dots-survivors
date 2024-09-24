@@ -1,25 +1,24 @@
-﻿using Player;
+﻿using Movement;
+using Player;
 using Unity.Burst;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace PlayerTarget {
+namespace PlayerTargeter {
     public partial struct PlayerTargetSystem : ISystem {
         
         [BurstCompile]
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<PlayerTag>();
-            state.RequireForUpdate<PlayerTargeterComponent>();
+            state.RequireForUpdate<PlayerTarget.PlayerTargeter>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            float2 playerLocation = GetPlayerLocation(ref state);
-            foreach (PlayerTargeterAspect targeter in SystemAPI.Query<PlayerTargeterAspect>()) {
-                targeter.Target(playerLocation);
-            }
+            state.Dependency = new TargetingJob {
+                PlayerLocation = GetPlayerLocation(ref state)
+            }.Schedule(state.Dependency);
         }
 
         [BurstCompile]
@@ -32,6 +31,13 @@ namespace PlayerTarget {
             LocalTransform localTransform = SystemAPI.GetComponent<LocalTransform>(playerEntity);
             float2 playerLocation = localTransform.Position.xy;
             return playerLocation;
+        }
+        
+        public partial struct TargetingJob : IJobEntity {
+            public float2 PlayerLocation;
+            public void Execute(Entity entity, ref PlayerTarget.PlayerTargeter _, ref Movement.Movement movement) {
+                movement.Target = PlayerLocation;
+            }
         }
         
       

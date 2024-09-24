@@ -2,12 +2,13 @@
 
 namespace Damage {
     public struct DamageEvent : IBufferElementData {
-        public readonly Entity Source;
+        public readonly Entity Attacker;
         public readonly int Value;
         
-        public DamageEvent(Entity source, int value) {
-            Source = source;
+        public DamageEvent(Entity attacker, int value) {
+            Attacker = attacker;
             Value = value;
         }
+        
     }
 }

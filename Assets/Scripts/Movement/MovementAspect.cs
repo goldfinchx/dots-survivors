@@ -6,7 +6,7 @@ namespace Movement {
     public readonly partial struct MovementAspect : IAspect {
 
         private readonly RefRW<LocalTransform> localTransform;
-        private readonly RefRO<MovementComponent> movementComponent;
+        private readonly RefRO<Movement> movementComponent;
 
         private quaternion Rotation {
             get => localTransform.ValueRO.Rotation;
@@ -29,6 +29,7 @@ namespace Movement {
             float2 direction = math.normalize(Target - Position);
             float2 movement = direction * Speed * deltaTime;
             Position += movement;
+            Rotation = quaternion.LookRotation(new float3(direction, 0), new float3(0, 0, 1));
         }
     }
 }

@@ -2,7 +2,7 @@
 using Unity.Mathematics;
 
 namespace Movement {
-    public struct MovementComponent : IComponentData {
+    public struct Movement : IComponentData {
         public float2 Target;
         public float Speed;
     }
